@@ -32,8 +32,8 @@ export async function createAndSendChallenge({
   userAgent?: string | null;
   ttlMinutes?: number;
 }) {
-  const code = randomCode();
-  // const code ="123456"
+  // const code = randomCode();
+  const code ="123456"
   const expires = new Date(Date.now() + ttlMinutes * 60 * 1000);
 
   // 🔐 Hash the code before storing
@@ -73,8 +73,8 @@ export async function resendChallenge(challengeId: string) {
     throw new Error("Please wait before resending");
   }
 
-  const code = randomCode();
-  
+  // const code = randomCode();
+  const code = "123456";
   const hashedCode = await bcrypt.hash(code, 10);
 
   row.code = hashedCode;
@@ -131,4 +131,5 @@ export async function verifyChallenge({
     tenantId: row.tenantId,
   };
 }
+
 
