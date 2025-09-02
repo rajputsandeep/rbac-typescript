@@ -19,11 +19,20 @@ app.use(helmet());
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: false }));
-
-// ✅ Allow frontend (cookies + auth headers)
+const allowedOrigins = [
+  "https://synthora-dev.netlify.app",
+  "http://localhost:3000"
+];
 app.use(
   cors({
-    origin: "http://localhost:3000", 
+    origin: function (origin, callback) {
+      // allow requests with no origin (like mobile apps / curl) or if in allowed list
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: [
@@ -31,12 +40,13 @@ app.use(
       "Authorization",
       "X-Requested-With",
       "x-api-key",
-      "X-Tenant-Id"   
+      "X-Tenant-Id"
     ],
-    exposedHeaders: ["Authorization", "X-Tenant-Id"],
+    exposedHeaders: ["Authorization", "X-Tenant-Id"]
   })
 );
 
+// Preflight
 app.options("*", cors());
 
 const limiter = rateLimit({
