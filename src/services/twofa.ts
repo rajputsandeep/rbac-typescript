@@ -32,8 +32,8 @@ export async function createAndSendChallenge({
   userAgent?: string | null;
   ttlMinutes?: number;
 }) {
-  // const code = randomCode();
-  const code ="123456"
+  const code = randomCode();
+  // const code ="123456"
   const expires = new Date(Date.now() + ttlMinutes * 60 * 1000);
 
   // 🔐 Hash the code before storing
@@ -131,3 +131,4 @@ export async function verifyChallenge({
     tenantId: row.tenantId,
   };
 }
+
